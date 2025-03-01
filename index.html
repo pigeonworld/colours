@@ -5,245 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucid Tools</title>
     <style>
-        body, html {
+        body {
             margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
-            font-family: 'Courier New', monospace;
-            color: #0f0;
-        }
-        
-        .space-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 70%);
-            z-index: -1;
-        }
-        
-        .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             padding: 20px;
-            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #000;
         }
-        
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
         .title {
-            font-size: 3.5rem;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
-            opacity: 0;
-            animation: fadeIn 2s forwards;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
         }
-        
+
         .tools {
             display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 1rem;
         }
-        
+
         .tool {
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 1px solid #0f0;
-            padding: 1.5rem;
+            border: 1px solid #000;
+            padding: 1rem;
             border-radius: 5px;
-            width: 200px;
             text-align: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
         }
-        
-        .tool:nth-child(1) {
-            animation: slideUp 0.5s 1s forwards;
-        }
-        
-        .tool:nth-child(2) {
-            animation: slideUp 0.5s 1.5s forwards;
-        }
-        
-        .tool:hover {
-            box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
-            transform: translateY(-5px);
-        }
-        
-        .tool-name {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .tool-link {
-            color: #0f0;
-            text-decoration: none;
-            border: 1px solid #0f0;
+
+        .tool a {
+            display: inline-block;
+            margin-top: 0.5rem;
             padding: 0.5rem 1rem;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .tool-link:hover {
-            background-color: #0f0;
+            border: 1px solid #000;
+            text-decoration: none;
             color: #000;
         }
-        
-        .coming-soon-banner {
-            position: absolute;
-            top: 1.2rem;
-            right: -2.5rem;
-            background: repeating-linear-gradient(
-                45deg,
-                #FFD700,
-                #FFD700 10px,
-                #000000 10px,
-                #000000 20px
-            );
-            color: #000;
-            padding: 0.3rem 3rem;
-            transform: rotate(45deg);
-            font-weight: bold;
-            font-size: 0.8rem;
+
+        .tool a:hover {
+            background: #000;
+            color: #fff;
         }
-        
+
         .disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 1.2rem;
-            background-color: #0f0;
-            margin-left: 5px;
-            animation: blink 1s infinite;
-        }
-        
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            opacity: 0.5;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <div class="space-background"></div>
-    
-    <div class="stars" id="stars"></div>
-    
+
     <div class="container">
-        <h1 class="title">Lucid Tools_<span class="cursor"></span></h1>
-        
+        <h1 class="title">Lucid Tools</h1>
+
         <div class="tools">
             <div class="tool">
                 <div class="tool-name">Colour Downloader</div>
-                <a href="colour/index.html" class="tool-link">Launch</a>
+                <a href="colour/index.html">Launch</a>
             </div>
-            
-            <div class="tool">
-                <div class="coming-soon-banner">COMING SOON</div>
+
+            <div class="tool disabled">
                 <div class="tool-name">Mystery Tool</div>
-                <span class="tool-link disabled">Unavailable</span>
+                <span>Coming Soon</span>
             </div>
         </div>
     </div>
 
-    <script>
-        // Create dynamic stars
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const starCount = 100;
-            
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                const size = Math.random() * 2;
-                
-                star.style.position = 'absolute';
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.backgroundColor = '#fff';
-                star.style.borderRadius = '50%';
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.opacity = Math.random();
-                star.style.animation = `twinkle ${Math.random() * 3 + 2}s infinite alternate`;
-                
-                starsContainer.appendChild(star);
-            }
-        }
-        
-        // Typewriter effect for the title
-        function typewriter() {
-            const title = document.querySelector('.title');
-            title.style.animation = 'none';
-            title.style.opacity = '1';
-            
-            const text = "Lucid Tools_";
-            title.textContent = "";
-            
-            let i = 0;
-            const interval = setInterval(() => {
-                if (i < text.length) {
-                    title.textContent += text.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(interval);
-                    title.innerHTML = "Lucid Tools_<span class='cursor'></span>";
-                }
-            }, 100);
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            createStars();
-            
-            // Apply typewriter effect after initial animation
-            setTimeout(typewriter, 500);
-            
-            // Add CSS for stars twinkling
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes twinkle {
-                    from { opacity: 0.2; }
-                    to { opacity: 0.8; }
-                }
-            `;
-            document.head.appendChild(style);
-        });
-    </script>
 </body>
 </html>
