@@ -4,45 +4,472 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4K Color Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #5D5FEF;
+            --text-color: #333;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            transition: var(--transition);
         }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 3rem;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #5D5FEF 0%, #833AB4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: left;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2.5rem;
+            text-align: left;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            background-color: #ff0000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .color-value {
+            flex: 1;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .color-picker-wrapper {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         #colorPicker {
-            width: 100px;
-            height: 50px;
-            border: none;
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
             cursor: pointer;
+            opacity: 0;
         }
-        #downloadBtn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
+        
+        .picker-icon {
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .color-presets {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .preset-color {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             cursor: pointer;
-            background-color: #333;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .preset-color:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .format-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .format-option {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: #f1f1f1;
+            font-weight: 500;
+        }
+
+        .format-option.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        #downloadBtn {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background-color: var(--primary-color);
             color: white;
             border: none;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3);
         }
+
         #downloadBtn:hover {
-            background-color: #555;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(93, 95, 239, 0.4);
+        }
+
+        #downloadBtn:active {
+            transform: translateY(-1px);
+        }
+
+        #copyHexBtn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            margin-left: 8px;
+            transition: var(--transition);
+        }
+
+        #copyHexBtn:hover {
+            color: var(--primary-color);
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .resolution-info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .color-info {
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .color-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .color-values {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .color-value-item {
+            padding: 0.5rem 1rem;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .color-value-item span {
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .format-selector {
+                justify-content: center;
+                margin-bottom: 1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>4K Color Generator</h1>
+        <p class="subtitle">Create high-resolution color images with a single click</p>
 
-    <h1>4K Color Generator</h1>
-    <p>Select a color and generate a 4K image of that color.</p>
+        <div class="color-preview" id="colorPreview">
+            <div class="resolution-info">3840 × 2160 (4K UHD)</div>
+        </div>
 
-    <input type="color" id="colorPicker" value="#ff0000">
-    <button id="downloadBtn">Download 4K Image</button>
+        <div class="color-info">
+            <h3>Color Values</h3>
+            <div class="color-values">
+                <div class="color-value-item" id="hexValue">
+                    <span>HEX:</span> #FF0000
+                    <button id="copyHexBtn" title="Copy HEX value">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <div class="color-value-item" id="rgbValue"><span>RGB:</span> 255, 0, 0</div>
+                <div class="color-value-item" id="hslValue"><span>HSL:</span> 0°, 100%, 50%</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="color-picker-container">
+                <div class="color-value">Select Color</div>
+                <div class="color-picker-wrapper" id="pickerWrapper">
+                    <input type="color" id="colorPicker" value="#ff0000">
+                    <i class="fas fa-eye-dropper picker-icon"></i>
+                </div>
+            </div>
+
+            <div>
+                <p style="text-align: left; margin-bottom: 0.5rem; color: #666;">Quick Colors</p>
+                <div class="color-presets">
+                    <div class="preset-color" style="background-color: #ff0000;" data-color="#ff0000"></div>
+                    <div class="preset-color" style="background-color: #ff9500;" data-color="#ff9500"></div>
+                    <div class="preset-color" style="background-color: #ffcc00;" data-color="#ffcc00"></div>
+                    <div class="preset-color" style="background-color: #4cd964;" data-color="#4cd964"></div>
+                    <div class="preset-color" style="background-color: #5ac8fa;" data-color="#5ac8fa"></div>
+                    <div class="preset-color" style="background-color: #007aff;" data-color="#007aff"></div>
+                    <div class="preset-color" style="background-color: #5856d6;" data-color="#5856d6"></div>
+                    <div class="preset-color" style="background-color: #ff2d55;" data-color="#ff2d55"></div>
+                    <div class="preset-color" style="background-color: #8e8e93;" data-color="#8e8e93"></div>
+                    <div class="preset-color" style="background-color: #ffffff;" data-color="#ffffff" style="border: 1px solid #e0e0e0;"></div>
+                    <div class="preset-color" style="background-color: #000000;" data-color="#000000"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="format-selector">
+                <div class="format-option active" data-format="png">PNG</div>
+                <div class="format-option" data-format="jpg">JPG</div>
+            </div>
+
+            <button id="downloadBtn">
+                <i class="fas fa-download"></i>
+                Download
+            </button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">Color copied to clipboard!</div>
+    <div class="tooltip" id="tooltip"></div>
 
     <script>
-        document.getElementById('downloadBtn').addEventListener('click', function() {
-            const color = document.getElementById('colorPicker').value;
+        // DOM Elements
+        const colorPicker = document.getElementById('colorPicker');
+        const colorPreview = document.getElementById('colorPreview');
+        const pickerWrapper = document.getElementById('pickerWrapper');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const copyHexBtn = document.getElementById('copyHexBtn');
+        const hexValue = document.getElementById('hexValue');
+        const rgbValue = document.getElementById('rgbValue');
+        const hslValue = document.getElementById('hslValue');
+        const presetColors = document.querySelectorAll('.preset-color');
+        const formatOptions = document.querySelectorAll('.format-option');
+        const notification = document.getElementById('notification');
+        const tooltip = document.getElementById('tooltip');
 
+        // State
+        let currentFormat = 'png';
+        let currentColor = '#ff0000';
+
+        // Functions
+        function updateColor(color) {
+            currentColor = color;
+            colorPreview.style.backgroundColor = color;
+            colorPicker.value = color;
+            pickerWrapper.style.backgroundColor = color;
+            
+            // Update color values
+            updateColorValues(color);
+        }
+
+        function updateColorValues(hex) {
+            // Update HEX value
+            const hexText = document.createTextNode(hex);
+            hexValue.innerHTML = '<span>HEX:</span> ';
+            hexValue.appendChild(hexText);
+            hexValue.appendChild(copyHexBtn);
+
+            // Convert HEX to RGB
+            const r = parseInt(hex.substring(1, 3), 16);
+            const g = parseInt(hex.substring(3, 5), 16);
+            const b = parseInt(hex.substring(5, 7), 16);
+            
+            rgbValue.innerHTML = `<span>RGB:</span> ${r}, ${g}, ${b}`;
+            
+            // Convert RGB to HSL
+            const hsl = rgbToHsl(r, g, b);
+            hslValue.innerHTML = `<span>HSL:</span> ${hsl.h}°, ${hsl.s}%, ${hsl.l}%`;
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0; // achromatic
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                
+                switch(max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                
+                h /= 6;
+            }
+
+            return {
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            };
+        }
+
+        function showNotification(text) {
+            notification.textContent = text;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        function showTooltip(e, text) {
+            tooltip.textContent = text;
+            tooltip.style.top = `${e.pageY + 10}px`;
+            tooltip.style.left = `${e.pageX + 10}px`;
+            tooltip.style.opacity = '1';
+        }
+
+        function hideTooltip() {
+            tooltip.style.opacity = '0';
+        }
+
+        function downloadImage() {
             // Create a canvas
             const canvas = document.createElement('canvas');
             canvas.width = 3840;
@@ -50,16 +477,69 @@
             const ctx = canvas.getContext('2d');
 
             // Fill the canvas with the selected color
-            ctx.fillStyle = color;
+            ctx.fillStyle = currentColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Convert to image and download
             const link = document.createElement('a');
-            link.download = '4K_Color.png';
-            link.href = canvas.toDataURL('image/png');
+            const fileName = `4K_${currentColor.substring(1)}.${currentFormat}`;
+            link.download = fileName;
+            
+            if (currentFormat === 'png') {
+                link.href = canvas.toDataURL('image/png');
+            } else {
+                link.href = canvas.toDataURL('image/jpeg', 1.0);
+            }
+            
             link.click();
-        });
-    </script>
+            
+            // Animation effect
+            downloadBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                downloadBtn.style.transform = '';
+            }, 100);
+        }
 
+        // Event Listeners
+        colorPicker.addEventListener('input', function() {
+            updateColor(this.value);
+        });
+
+        downloadBtn.addEventListener('click', downloadImage);
+
+        copyHexBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(currentColor)
+                .then(() => {
+                    showNotification('Color code copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        });
+
+        presetColors.forEach(preset => {
+            preset.addEventListener('click', function() {
+                const color = this.getAttribute('data-color');
+                updateColor(color);
+            });
+            
+            preset.addEventListener('mouseover', function(e) {
+                showTooltip(e, this.getAttribute('data-color'));
+            });
+            
+            preset.addEventListener('mouseout', hideTooltip);
+        });
+
+        formatOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                formatOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                currentFormat = this.getAttribute('data-format');
+            });
+        });
+
+        // Initialize
+        updateColor(currentColor);
+    </script>
 </body>
 </html>
