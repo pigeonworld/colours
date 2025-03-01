@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4K Color Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f4f4f4;
+        }
+        #colorPicker {
+            width: 100px;
+            height: 50px;
+            border: none;
+            cursor: pointer;
+        }
+        #downloadBtn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: none;
+        }
+        #downloadBtn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>4K Color Generator</h1>
+    <p>Select a color and generate a 4K image of that color.</p>
+
+    <input type="color" id="colorPicker" value="#ff0000">
+    <button id="downloadBtn">Download 4K Image</button>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const color = document.getElementById('colorPicker').value;
+
+            // Create a canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = 3840;
+            canvas.height = 2160;
+            const ctx = canvas.getContext('2d');
+
+            // Fill the canvas with the selected color
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Convert to image and download
+            const link = document.createElement('a');
+            link.download = '4K_Color.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+
+</body>
+</html>
